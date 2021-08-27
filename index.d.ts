@@ -1,418 +1,477 @@
-
-import { EventEmitter } from 'events'
-import { RequestInit } from 'node-fetch'
-import puppeteer from 'puppeteer'
+import { EventEmitter } from "events";
+import { RequestInit } from "node-fetch";
+import puppeteer from "puppeteer";
 
 declare namespace WAWebJS {
-
     export class Client extends EventEmitter {
-        constructor(options: ClientOptions)
+        constructor(options: ClientOptions);
 
         /** Current connection information */
-        public info: ClientInfo
+        public info: ClientInfo;
 
         /** Puppeteer page running WhatsApp Web */
-        pupPage?: puppeteer.Page
+        pupPage?: puppeteer.Page;
 
         /** Puppeteer browser running WhatsApp Web */
-        pupBrowser?: puppeteer.Browser
+        pupBrowser?: puppeteer.Browser;
 
         /**Accepts an invitation to join a group */
-        acceptInvite(inviteCode: string): Promise<string>
+        acceptInvite(inviteCode: string): Promise<string>;
 
         /** Accepts a private invitation to join a group (v4 invite) */
-        acceptGroupV4Invite: (inviteV4: InviteV4Data) => Promise<{status: number}>
+        acceptGroupV4Invite: (
+            inviteV4: InviteV4Data
+        ) => Promise<{ status: number }>;
 
         /**Returns an object with information about the invite code's group */
-        getInviteInfo(inviteCode: string): Promise<object>
+        getInviteInfo(inviteCode: string): Promise<object>;
 
         /** Enables and returns the archive state of the Chat */
-        archiveChat(chatId: string): Promise<boolean>
+        archiveChat(chatId: string): Promise<boolean>;
 
         /** Pins the Chat and returns its new Pin state */
-        pinChat(chatId: string): Promise<boolean>
+        pinChat(chatId: string): Promise<boolean>;
 
         /** Unpins the Chat and returns its new Pin state */
-        unpinChat(chatId: string): Promise<boolean>
+        unpinChat(chatId: string): Promise<boolean>;
 
         /**
          * Create a new group
          * @param name group title
          * @param participants an array of Contacts or contact IDs to add to the group
          */
-        createGroup(name: string, participants: Contact[] | string[]): Promise<CreateGroupResult>
+        createGroup(
+            name: string,
+            participants: Contact[] | string[]
+        ): Promise<CreateGroupResult>;
 
         /** Closes the client */
-        destroy(): Promise<void>
+        destroy(): Promise<void>;
 
         /** Logs out the client, closing the current session */
-        logout(): Promise<void>
+        logout(): Promise<void>;
 
         /** Get all blocked contacts by host account */
-        getBlockedContacts(): Promise<Contact[]>
+        getBlockedContacts(): Promise<Contact[]>;
 
         /** Get chat instance by ID */
-        getChatById(chatId: string): Promise<Chat>
+        getChatById(chatId: string): Promise<Chat>;
 
         /** Get all current chat instances */
-        getChats(): Promise<Chat[]>
+        getChats(): Promise<Chat[]>;
 
         /** Get contact instance by ID */
-        getContactById(contactId: string): Promise<Contact>
+        getContactById(contactId: string): Promise<Contact>;
 
         /** Get all current contact instances */
-        getContacts(): Promise<Contact[]>
-        
+        getContacts(): Promise<Contact[]>;
+
         /** Get the country code of a WhatsApp ID. (154185968@c.us) => (1) */
-        getCountryCode(number: string): Promise<string>
+        getCountryCode(number: string): Promise<string>;
 
         /** Get the formatted number of a WhatsApp ID. (12345678901@c.us) => (+1 (234) 5678-901) */
-        getFormattedNumber(number: string): Promise<string>
+        getFormattedNumber(number: string): Promise<string>;
 
         /** Get all current Labels  */
-        getLabels(): Promise<Label[]>
+        getLabels(): Promise<Label[]>;
 
         /** Get Label instance by ID */
-        getLabelById(labelId: string): Promise<Label>
+        getLabelById(labelId: string): Promise<Label>;
 
         /** Get all Labels assigned to a Chat */
-        getChatLabels(chatId: string): Promise<Label[]>
+        getChatLabels(chatId: string): Promise<Label[]>;
 
         /** Get all Chats for a specific Label */
-        getChatsByLabelId(labelId: string): Promise<Chat[]>
+        getChatsByLabelId(labelId: string): Promise<Chat[]>;
 
         /** Returns the contact ID's profile picture URL, if privacy settings allow it */
-        getProfilePicUrl(contactId: string): Promise<string>
+        getProfilePicUrl(contactId: string): Promise<string>;
 
         /** Gets the current connection state for the client */
-        getState(): Promise<WAState>
+        getState(): Promise<WAState>;
 
         /** Returns the version of WhatsApp Web currently being run */
-        getWWebVersion(): Promise<string>
+        getWWebVersion(): Promise<string>;
 
         /** Sets up events and requirements, kicks off authentication request */
-        initialize(): Promise<void>
+        initialize(): Promise<void>;
 
         /** Check if a given ID is registered in whatsapp */
-        isRegisteredUser(contactId: string): Promise<boolean>
+        isRegisteredUser(contactId: string): Promise<boolean>;
 
         /** Get the registered WhatsApp ID for a number. Returns null if the number is not registered on WhatsApp. */
-        getNumberId(number: string): Promise<ContactId | null>
+        getNumberId(number: string): Promise<ContactId | null>;
 
         /**
          * Mutes this chat forever, unless a date is specified
          * @param chatId ID of the chat that will be muted
          * @param unmuteDate Date when the chat will be unmuted, leave as is to mute forever
          */
-        muteChat(chatId: string, unmuteDate?: Date): Promise<void>
+        muteChat(chatId: string, unmuteDate?: Date): Promise<void>;
 
         /** Force reset of connection state for the client */
-        resetState(): Promise<void>
+        resetState(): Promise<void>;
 
         /** Send a message to a specific chatId */
-        sendMessage(chatId: string, content: MessageContent, options?: MessageSendOptions): Promise<Message>
+        sendMessage(
+            chatId: string,
+            content: MessageContent,
+            options?: MessageSendOptions
+        ): Promise<Message>;
 
         /** Searches for messages */
-        searchMessages(query: string, options?: { chatId?: string, page?: number, limit?: number }): Promise<Message[]>
+        searchMessages(
+            query: string,
+            options?: { chatId?: string; page?: number; limit?: number }
+        ): Promise<Message[]>;
 
         /** Marks the client as online */
-        sendPresenceAvailable(): Promise<void>
+        sendPresenceAvailable(): Promise<void>;
 
         /** Mark as seen for the Chat */
-        sendSeen(chatId: string): Promise<boolean>
+        sendSeen(chatId: string): Promise<boolean>;
 
         /** Mark the Chat as unread */
-        markChatUnread(chatId: string): Promise<void>
+        markChatUnread(chatId: string): Promise<void>;
 
-        /** 
+        /**
          * Sets the current user's status message
          * @param status New status message
          */
-        setStatus(status: string): Promise<void>
+        setStatus(status: string): Promise<void>;
 
-        /** 
+        /**
          * Sets the current user's display name
          * @param displayName New display name
          */
-        setDisplayName(displayName: string): Promise<void>
+        setDisplayName(displayName: string): Promise<void>;
 
         /** Changes and returns the archive state of the Chat */
-        unarchiveChat(chatId: string): Promise<boolean>
+        unarchiveChat(chatId: string): Promise<boolean>;
 
         /** Unmutes the Chat */
-        unmuteChat(chatId: string): Promise<void>
+        unmuteChat(chatId: string): Promise<void>;
 
         /** Generic event */
-        on(event: string, listener: (...args: any) => void): this
+        on(event: string, listener: (...args: any) => void): this;
 
         /** Emitted when there has been an error while trying to restore an existing session */
-        on(event: 'auth_failure', listener: (message: string) => void): this
+        on(event: "auth_failure", listener: (message: string) => void): this;
 
         /** Emitted when authentication is successful */
-        on(event: 'authenticated', listener: (
-            /** Object containing session information. Can be used to restore the session */
-            session: ClientSession
-        ) => void): this
+        on(
+            event: "authenticated",
+            listener: (
+                /** Object containing session information. Can be used to restore the session */
+                session: ClientSession
+            ) => void
+        ): this;
 
         /** Emitted when the battery percentage for the attached device changes */
-        on(event: 'change_battery', listener: (batteryInfo: BatteryInfo) => void): this
+        on(
+            event: "change_battery",
+            listener: (batteryInfo: BatteryInfo) => void
+        ): this;
 
         /** Emitted when the connection state changes */
-        on(event: 'change_state', listener: (
-            /** the new connection state */
-            state: WAState
-        ) => void): this
+        on(
+            event: "change_state",
+            listener: (
+                /** the new connection state */
+                state: WAState
+            ) => void
+        ): this;
 
         /** Emitted when the client has been disconnected */
-        on(event: 'disconnected', listener: (
-            /** reason that caused the disconnect */
-            reason: WAState | "NAVIGATED"
-        ) => void): this
+        on(
+            event: "disconnected",
+            listener: (
+                /** reason that caused the disconnect */
+                reason: WAState | "NAVIGATED"
+            ) => void
+        ): this;
 
         /** Emitted when a user joins the chat via invite link or is added by an admin */
-        on(event: 'group_join', listener: (
-            /** GroupNotification with more information about the action */
-            notification: GroupNotification
-        ) => void): this
+        on(
+            event: "group_join",
+            listener: (
+                /** GroupNotification with more information about the action */
+                notification: GroupNotification
+            ) => void
+        ): this;
 
         /** Emitted when a user leaves the chat or is removed by an admin */
-        on(event: 'group_leave', listener: (
-            /** GroupNotification with more information about the action */
-            notification: GroupNotification
-        ) => void): this
+        on(
+            event: "group_leave",
+            listener: (
+                /** GroupNotification with more information about the action */
+                notification: GroupNotification
+            ) => void
+        ): this;
 
         /** Emitted when group settings are updated, such as subject, description or picture */
-        on(event: 'group_update', listener: (
-            /** GroupNotification with more information about the action */
-            notification: GroupNotification
-        ) => void): this
+        on(
+            event: "group_update",
+            listener: (
+                /** GroupNotification with more information about the action */
+                notification: GroupNotification
+            ) => void
+        ): this;
 
         /** Emitted when media has been uploaded for a message sent by the client */
-        on(event: 'media_uploaded', listener: (
-            /** The message with media that was uploaded */
-            message: Message
-        ) => void): this
+        on(
+            event: "media_uploaded",
+            listener: (
+                /** The message with media that was uploaded */
+                message: Message
+            ) => void
+        ): this;
 
         /** Emitted when a new message is received */
-        on(event: 'message', listener: (
-            /** The message that was received */
-            message: Message
-        ) => void): this
+        on(
+            event: "message",
+            listener: (
+                /** The message that was received */
+                message: Message
+            ) => void
+        ): this;
 
         /** Emitted when an ack event occurrs on message type */
-        on(event: 'message_ack', listener: (
-            /** The message that was affected */
-            message: Message,
-            /** The new ACK value */
-            ack: MessageAck
-        ) => void): this
+        on(
+            event: "message_ack",
+            listener: (
+                /** The message that was affected */
+                message: Message,
+                /** The new ACK value */
+                ack: MessageAck
+            ) => void
+        ): this;
 
         /** Emitted when a new message is created, which may include the current user's own messages */
-        on(event: 'message_create', listener: (
-            /** The message that was created */
-            message: Message
-        ) => void): this
+        on(
+            event: "message_create",
+            listener: (
+                /** The message that was created */
+                message: Message
+            ) => void
+        ): this;
 
         /** Emitted when a message is deleted for everyone in the chat */
-        on(event: 'message_revoke_everyone', listener: (
-            /** The message that was revoked, in its current state. It will not contain the original message's data */
-            message: Message,
-            /**The message that was revoked, before it was revoked. 
-             * It will contain the message's original data. 
-             * Note that due to the way this data is captured, 
-             * it may be possible that this param will be undefined. */
-            revoked_msg?: Message | null
-        ) => void): this
+        on(
+            event: "message_revoke_everyone",
+            listener: (
+                /** The message that was revoked, in its current state. It will not contain the original message's data */
+                message: Message,
+                /**The message that was revoked, before it was revoked.
+                 * It will contain the message's original data.
+                 * Note that due to the way this data is captured,
+                 * it may be possible that this param will be undefined. */
+                revoked_msg?: Message | null
+            ) => void
+        ): this;
 
         /** Emitted when a message is deleted by the current user */
-        on(event: 'message_revoke_me', listener: (
-            /** The message that was revoked */
-            message: Message
-        ) => void): this
+        on(
+            event: "message_revoke_me",
+            listener: (
+                /** The message that was revoked */
+                message: Message
+            ) => void
+        ): this;
 
         /** Emitted when the QR code is received */
-        on(event: 'qr', listener: (
-            /** qr code string
-             *  @example ```1@9Q8tWf6bnezr8uVGwVCluyRuBOJ3tIglimzI5dHB0vQW2m4DQ0GMlCGf,f1/vGcW4Z3vBa1eDNl3tOjWqLL5DpYTI84DMVkYnQE8=,ZL7YnK2qdPN8vKo2ESxhOQ==``` */
-            qr: string
-        ) => void): this
+        on(
+            event: "qr",
+            listener: (
+                /** qr code string
+                 *  @example ```1@9Q8tWf6bnezr8uVGwVCluyRuBOJ3tIglimzI5dHB0vQW2m4DQ0GMlCGf,f1/vGcW4Z3vBa1eDNl3tOjWqLL5DpYTI84DMVkYnQE8=,ZL7YnK2qdPN8vKo2ESxhOQ==``` */
+                qr: string
+            ) => void
+        ): this;
 
         /** Emitted when a call is received */
-        on(event: 'call', listener: (
-            /** The call that started */
-            call: Call
-        ) => void): this
+        on(
+            event: "call",
+            listener: (
+                /** The call that started */
+                call: Call
+            ) => void
+        ): this;
 
         /** Emitted when the client has initialized and is ready to receive messages */
-        on(event: 'ready', listener: () => void): this
+        on(event: "ready", listener: () => void): this;
     }
 
     /** Current connection information */
     export interface ClientInfo {
-        /** 
-         * Current user ID 
-         * @deprecated Use .wid instead 
+        /**
+         * Current user ID
+         * @deprecated Use .wid instead
          */
-        me: ContactId
+        me: ContactId;
         /** Current user ID */
-        wid: ContactId
+        wid: ContactId;
         /** Information about the phone this client is connected to */
-        phone: ClientInfoPhone
+        phone: ClientInfoPhone;
         /** Platform the phone is running on */
-        platform: string
+        platform: string;
         /** Name configured to be shown in push notifications */
-        pushname: string
+        pushname: string;
 
         /** Get current battery percentage and charging status for the attached device */
-        getBatteryStatus: () => Promise<BatteryInfo>
+        getBatteryStatus: () => Promise<BatteryInfo>;
     }
 
     /** Information about the phone this client is connected to */
     export interface ClientInfoPhone {
         /** WhatsApp Version running on the phone */
-        wa_version: string
+        wa_version: string;
         /** OS Version running on the phone (iOS or Android version) */
-        os_version: string
+        os_version: string;
         /** Device manufacturer */
-        device_manufacturer: string
+        device_manufacturer: string;
         /** Device model */
-        device_model: string
+        device_model: string;
         /** OS build number */
-        os_build_number: string
+        os_build_number: string;
     }
 
     /** Options for initializing the whatsapp client */
     export interface ClientOptions {
         /** Timeout for authentication selector in puppeteer
          * @default 45000 */
-        authTimeoutMs?: number,
+        authTimeoutMs?: number;
         /** Puppeteer launch options. View docs here: https://github.com/puppeteer/puppeteer/ */
-        puppeteer?: puppeteer.LaunchOptions & puppeteer.BrowserLaunchArgumentOptions & puppeteer.BrowserConnectOptions
+        puppeteer?: puppeteer.LaunchOptions &
+            puppeteer.BrowserLaunchArgumentOptions &
+            puppeteer.BrowserConnectOptions;
         /** Refresh interval for qr code (how much time to wait before checking if the qr code has changed)
          * @default 20000 */
-        qrRefreshIntervalMs?: number
+        qrRefreshIntervalMs?: number;
         /** Timeout for qr code selector in puppeteer
          * @default 45000 */
-        qrTimeoutMs?: number,
-		/** How many times should the qrcode be refreshed before giving up
-		 * @default 0 (disabled) */
-		qrMaxRetries?: number,
+        qrTimeoutMs?: number;
+        /** How many times should the qrcode be refreshed before giving up
+         * @default 0 (disabled) */
+        qrMaxRetries?: number;
         /** Restart client with a new session (i.e. use null 'session' var) if authentication fails
          * @default false */
-        restartOnAuthFail?: boolean
+        restartOnAuthFail?: boolean;
         /** Whatsapp session to restore. If not set, will start a new session */
-        session?: ClientSession
+        session?: ClientSession;
         /** If another whatsapp web session is detected (another browser), take over the session in the current browser
          * @default false */
-        takeoverOnConflict?: boolean,
+        takeoverOnConflict?: boolean;
         /** How much time to wait before taking over the session
          * @default 0 */
-        takeoverTimeoutMs?: number,
+        takeoverTimeoutMs?: number;
         /** User agent to use in puppeteer.
          * @default 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36' */
-        userAgent?: string
-        /** Ffmpeg path to use when formating videos to webp while sending stickers 
+        userAgent?: string;
+        /** Ffmpeg path to use when formating videos to webp while sending stickers
          * @default 'ffmpeg' */
-        ffmpegPath?: string
+        ffmpegPath?: string;
     }
 
     /** Represents a Whatsapp client session */
     export interface ClientSession {
-        WABrowserId: string,
-        WASecretBundle: string,
-        WAToken1: string,
-        WAToken2: string,
+        WABrowserId: string;
+        WASecretBundle: string;
+        WAToken1: string;
+        WAToken2: string;
     }
 
     export interface BatteryInfo {
         /** The current battery percentage */
-        battery: number,
+        battery: number;
         /** Indicates if the phone is plugged in (true) or not (false) */
-        plugged: boolean,
+        plugged: boolean;
     }
 
     export interface CreateGroupResult {
         /** ID for the group that was just created */
-        gid: string,
-        /** participants that were not added to the group. 
+        gid: string;
+        /** participants that were not added to the group.
          * Keys represent the ID for participant that was not added and its value is a status code
-         * that represents the reason why participant could not be added. 
+         * that represents the reason why participant could not be added.
          * This is usually 403 if the user's privacy settings don't allow you to add them to groups. */
-        missingParticipants: Record<string, string>
+        missingParticipants: Record<string, string>;
     }
 
     export interface GroupNotification {
         /** ContactId for the user that produced the GroupNotification */
-        author: string,
+        author: string;
         /** Extra content */
-        body: string,
+        body: string;
         /** ID for the Chat that this groupNotification was sent for */
-        chatId: string,
-        /** ID that represents the groupNotification 
+        chatId: string;
+        /** ID that represents the groupNotification
          *  @todo create a more specific type for the id object */
-        id: object,
+        id: object;
         /** Contact IDs for the users that were affected by this GroupNotification */
-        recipientIds: string[],
+        recipientIds: string[];
         /** Unix timestamp for when the groupNotification was created */
-        timestamp: number,
+        timestamp: number;
         /** GroupNotification type */
-        type: GroupNotificationTypes,
+        type: GroupNotificationTypes;
 
         /** Returns the Chat this GroupNotification was sent in */
-        getChat: () => Promise<Chat>,
+        getChat: () => Promise<Chat>;
         /** Returns the Contact this GroupNotification was produced by */
-        getContact: () => Promise<Contact>,
+        getContact: () => Promise<Contact>;
         /** Returns the Contacts affected by this GroupNotification */
-        getRecipients: () => Promise<Contact[]>,
+        getRecipients: () => Promise<Contact[]>;
         /** Sends a message to the same chat this GroupNotification was produced in */
-        reply: (content: MessageContent, options?: MessageSendOptions) => Promise<Message>,
-
+        reply: (
+            content: MessageContent,
+            options?: MessageSendOptions
+        ) => Promise<Message>;
     }
-    
+
     /** whatsapp web url */
-    export const WhatsWebURL: string
+    export const WhatsWebURL: string;
 
     /** default client options */
-    export const DefaultOptions: ClientOptions
+    export const DefaultOptions: ClientOptions;
 
     /** Chat types */
     export enum ChatTypes {
-        SOLO = 'solo',
-        GROUP = 'group',
-        UNKNOWN = 'unknown',
+        SOLO = "solo",
+        GROUP = "group",
+        UNKNOWN = "unknown",
     }
 
     /** Events that can be emitted by the client */
     export enum Events {
-        AUTHENTICATED = 'authenticated',
-        AUTHENTICATION_FAILURE = 'auth_failure',
-        READY = 'ready',
-        MESSAGE_RECEIVED = 'message',
-        MESSAGE_CREATE = 'message_create',
-        MESSAGE_REVOKED_EVERYONE = 'message_revoke_everyone',
-        MESSAGE_REVOKED_ME = 'message_revoke_me',
-        MESSAGE_ACK = 'message_ack',
-        MEDIA_UPLOADED = 'media_uploaded',
-        GROUP_JOIN = 'group_join',
-        GROUP_LEAVE = 'group_leave',
-        GROUP_UPDATE = 'group_update',
-        QR_RECEIVED = 'qr',
-        DISCONNECTED = 'disconnected',
-        STATE_CHANGED = 'change_state',
-        BATTERY_CHANGED = 'change_battery',
+        AUTHENTICATED = "authenticated",
+        AUTHENTICATION_FAILURE = "auth_failure",
+        READY = "ready",
+        MESSAGE_RECEIVED = "message",
+        MESSAGE_CREATE = "message_create",
+        MESSAGE_REVOKED_EVERYONE = "message_revoke_everyone",
+        MESSAGE_REVOKED_ME = "message_revoke_me",
+        MESSAGE_ACK = "message_ack",
+        MEDIA_UPLOADED = "media_uploaded",
+        GROUP_JOIN = "group_join",
+        GROUP_LEAVE = "group_leave",
+        GROUP_UPDATE = "group_update",
+        QR_RECEIVED = "qr",
+        DISCONNECTED = "disconnected",
+        STATE_CHANGED = "change_state",
+        BATTERY_CHANGED = "change_battery",
     }
 
     /** Group notification types */
     export enum GroupNotificationTypes {
-        ADD = 'add',
-        INVITE = 'invite',
-        REMOVE = 'remove',
-        LEAVE = 'leave',
-        SUBJECT = 'subject',
-        DESCRIPTION = 'description',
-        PICTURE = 'picture',
-        ANNOUNCE = 'announce',
-        RESTRICT = 'restrict',
+        ADD = "add",
+        INVITE = "invite",
+        REMOVE = "remove",
+        LEAVE = "leave",
+        SUBJECT = "subject",
+        DESCRIPTION = "description",
+        PICTURE = "picture",
+        ANNOUNCE = "announce",
+        RESTRICT = "restrict",
     }
 
     /** Message ACK */
@@ -427,22 +486,22 @@ declare namespace WAWebJS {
 
     /** Message types */
     export enum MessageTypes {
-        TEXT = 'chat',
-        AUDIO = 'audio',
-        VOICE = 'ptt',
-        IMAGE = 'image',
-        VIDEO = 'video',
-        DOCUMENT = 'document',
-        STICKER = 'sticker',
-        LOCATION = 'location',
-        CONTACT_CARD = 'vcard',
-        CONTACT_CARD_MULTI = 'multi_vcard',
-        REVOKED = 'revoked',
-        ORDER = 'order',
-        PRODUCT = 'product',
-        PAYMENT = 'payment',
-        UNKNOWN = 'unknown',
-        GROUP_INVITE = 'groups_v4_invite',
+        TEXT = "chat",
+        AUDIO = "audio",
+        VOICE = "ptt",
+        IMAGE = "image",
+        VIDEO = "video",
+        DOCUMENT = "document",
+        STICKER = "sticker",
+        LOCATION = "location",
+        CONTACT_CARD = "vcard",
+        CONTACT_CARD_MULTI = "multi_vcard",
+        REVOKED = "revoked",
+        ORDER = "order",
+        PRODUCT = "product",
+        PAYMENT = "payment",
+        UNKNOWN = "unknown",
+        GROUP_INVITE = "groups_v4_invite",
     }
 
     /** Client status */
@@ -454,41 +513,41 @@ declare namespace WAWebJS {
 
     /** WhatsApp state */
     export enum WAState {
-        CONFLICT = 'CONFLICT',
-        CONNECTED = 'CONNECTED',
-        DEPRECATED_VERSION = 'DEPRECATED_VERSION',
-        OPENING = 'OPENING',
-        PAIRING = 'PAIRING',
-        PROXYBLOCK = 'PROXYBLOCK',
-        SMB_TOS_BLOCK = 'SMB_TOS_BLOCK',
-        TIMEOUT = 'TIMEOUT',
-        TOS_BLOCK = 'TOS_BLOCK',
-        UNLAUNCHED = 'UNLAUNCHED',
-        UNPAIRED = 'UNPAIRED',
-        UNPAIRED_IDLE = 'UNPAIRED_IDLE',
+        CONFLICT = "CONFLICT",
+        CONNECTED = "CONNECTED",
+        DEPRECATED_VERSION = "DEPRECATED_VERSION",
+        OPENING = "OPENING",
+        PAIRING = "PAIRING",
+        PROXYBLOCK = "PROXYBLOCK",
+        SMB_TOS_BLOCK = "SMB_TOS_BLOCK",
+        TIMEOUT = "TIMEOUT",
+        TOS_BLOCK = "TOS_BLOCK",
+        UNLAUNCHED = "UNLAUNCHED",
+        UNPAIRED = "UNPAIRED",
+        UNPAIRED_IDLE = "UNPAIRED_IDLE",
     }
 
     export type MessageInfo = {
-        delivery: Array<{id: ContactId, t: number}>,
-        deliveryRemaining: number,
-        played: Array<{id: ContactId, t: number}>,
-        playedRemaining: number,
-        read: Array<{id: ContactId, t: number}>,
-        readRemaining: number
-    }
+        delivery: Array<{ id: ContactId; t: number }>;
+        deliveryRemaining: number;
+        played: Array<{ id: ContactId; t: number }>;
+        playedRemaining: number;
+        read: Array<{ id: ContactId; t: number }>;
+        readRemaining: number;
+    };
 
     export type InviteV4Data = {
-        inviteCode: string,
-        inviteCodeExp: number,
-        groupId: string,
-        groupName?: string,
-        fromId: string,
-        toId: string
-    }
+        inviteCode: string;
+        inviteCodeExp: number;
+        groupId: string;
+        groupName?: string;
+        fromId: string;
+        toId: string;
+    };
 
     /**
      * Represents a Message on WhatsApp
-     * 
+     *
      * @example
      * {
      *   mediaKey: undefined,
@@ -516,216 +575,230 @@ declare namespace WAWebJS {
      */
     export interface Message {
         /** ACK status for the message */
-        ack: MessageAck,
+        ack: MessageAck;
         /** If the message was sent to a group, this field will contain the user that sent the message. */
-        author?: string,
+        author?: string;
         /** Message content */
-        body: string,
+        body: string;
         /** Indicates if the message was a broadcast */
-        broadcast: boolean,
+        broadcast: boolean;
         /** Indicates if the message was a status update */
-        isStatus: boolean,
+        isStatus: boolean;
         /** Indicates if the message is a Gif */
-        isGif: boolean,
+        isGif: boolean;
         /** ID for the Chat that this message was sent to, except if the message was sent by the current user */
-        from: string,
+        from: string;
         /** Indicates if the message was sent by the current user */
-        fromMe: boolean,
+        fromMe: boolean;
         /** Indicates if the message has media available for download */
-        hasMedia: boolean,
+        hasMedia: boolean;
         /** Indicates if the message was sent as a reply to another message */
-        hasQuotedMsg: boolean,
+        hasQuotedMsg: boolean;
         /** ID that represents the message */
-        id: MessageId,
+        id: MessageId;
         /** Indicates if the message was forwarded */
-        isForwarded: boolean,
+        isForwarded: boolean;
         /**
          * Indicates how many times the message was forwarded.
          * The maximum value is 127.
          */
-        forwardingScore: number,
+        forwardingScore: number;
         /** Indicates if the message was starred */
-        isStarred: boolean,
+        isStarred: boolean;
         /** Location information contained in the message, if the message is type "location" */
-        location: Location,
+        location: Location;
         /** List of vCards contained in the message */
-        vCards: string[],
+        vCards: string[];
         /** Invite v4 info */
-        inviteV4?: InviteV4Data,
+        inviteV4?: InviteV4Data;
         /** MediaKey that represents the sticker 'ID' */
-        mediaKey?: string,
+        mediaKey?: string;
         /** Indicates the mentions in the message body. */
-        mentionedIds: [],
+        mentionedIds: [];
         /** Unix timestamp for when the message was created */
-        timestamp: number,
+        timestamp: number;
         /**
          * ID for who this message is for.
          * If the message is sent by the current user, it will be the Chat to which the message is being sent.
          * If the message is sent by another user, it will be the ID for the current user.
          */
-        to: string,
+        to: string;
         /** Message type */
-        type: MessageTypes,
+        type: MessageTypes;
         /** Links included in the message. */
         links: Array<{
-            link: string,
-            isSuspicious: boolean
-        }>,
+            link: string;
+            isSuspicious: boolean;
+        }>;
         /** Order ID */
-        orderId: string,
+        orderId: string;
         /** title */
-        title?: string,
+        title?: string;
         /** description*/
-        description?: string,
+        description?: string;
         /** Business Owner JID */
-        businessOwnerJid?: string,
+        businessOwnerJid?: string;
         /** Product JID */
-        productId?: string,
+        productId?: string;
         /** Message buttons */
-        dynamicReplyButtons?: object,
+        dynamicReplyButtons?: object;
         /** Selected button ID */
-        selectedButtonId?: string,
+        selectedButtonId?: string;
         /** Selected list row ID */
-        selectedRowId?: string,
+        selectedRowId?: string;
         /** Accept the Group V4 Invite in message */
-        acceptGroupV4Invite: () => Promise<{status: number}>,
+        acceptGroupV4Invite: () => Promise<{ status: number }>;
         /** Deletes the message from the chat */
-        delete: (everyone?: boolean) => Promise<void>,
+        delete: (everyone?: boolean) => Promise<void>;
         /** Downloads and returns the attatched message media */
-        downloadMedia: () => Promise<MessageMedia>,
+        downloadMedia: () => Promise<MessageMedia>;
         /** Returns the Chat this message was sent in */
-        getChat: () => Promise<Chat>,
+        getChat: () => Promise<Chat>;
         /** Returns the Contact this message was sent from */
-        getContact: () => Promise<Contact>,
+        getContact: () => Promise<Contact>;
         /** Returns the Contacts mentioned in this message */
-        getMentions: () => Promise<Contact[]>,
+        getMentions: () => Promise<Contact[]>;
         /** Returns the quoted message, if any */
-        getQuotedMessage: () => Promise<Message>,
-        /** 
-         * Sends a message as a reply to this message. 
+        getQuotedMessage: () => Promise<Message>;
+        /**
+         * Sends a message as a reply to this message.
          * If chatId is specified, it will be sent through the specified Chat.
-         * If not, it will send the message in the same Chat as the original message was sent. 
+         * If not, it will send the message in the same Chat as the original message was sent.
          */
-        reply: (content: MessageContent, chatId?: string, options?: MessageSendOptions) => Promise<Message>,
-        /** 
+        reply: (
+            content: MessageContent,
+            chatId?: string,
+            options?: MessageSendOptions
+        ) => Promise<Message>;
+        /**
          * Forwards this message to another chat
          */
-        forward: (chat: Chat | string) => Promise<void>,
+        forward: (chat: Chat | string) => Promise<void>;
         /** Star this message */
-        star: () => Promise<void>,
+        star: () => Promise<void>;
         /** Unstar this message */
-        unstar: () => Promise<void>,
+        unstar: () => Promise<void>;
         /** Get information about message delivery statuso */
-        getInfo: () => Promise<MessageInfo | null>,
+        getInfo: () => Promise<MessageInfo | null>;
         /**
          * Gets the order associated with a given message
          */
-        getOrder: () => Order,
+        getOrder: () => Order;
         /**
          * Gets the payment details associated with a given message
          */
-        getPayment: () => Payment,
+        getPayment: () => Payment;
     }
 
     /** ID that represents a message */
     export interface MessageId {
-        fromMe: boolean,
-        remote: string,
-        id: string,
-        _serialized: string,
+        fromMe: boolean;
+        remote: string;
+        id: string;
+        _serialized: string;
     }
 
     /** Location information */
     export class Location {
-        description?: string | null
-        latitude: string
-        longitude: string
-        
-        constructor(latitude: number, longitude: number, description?: string)
+        description?: string | null;
+        latitude: string;
+        longitude: string;
+
+        constructor(latitude: number, longitude: number, description?: string);
     }
 
     export interface Label {
         /** Label name */
-        name: string,
+        name: string;
         /** Label ID */
-        id: string,
+        id: string;
         /** Color assigned to the label */
-        hexColor: string,
+        hexColor: string;
 
         /** Get all chats that have been assigned this Label */
-        getChats: () => Promise<Chat[]>
+        getChats: () => Promise<Chat[]>;
     }
 
     /** Options for sending a message */
     export interface MessageSendOptions {
         /** Show links preview */
-        linkPreview?: boolean
+        linkPreview?: boolean;
         /** Send audio as voice message */
-        sendAudioAsVoice?: boolean
+        sendAudioAsVoice?: boolean;
         /** Send video as gif */
-        sendVideoAsGif?: boolean
+        sendVideoAsGif?: boolean;
         /** Send media as sticker */
-        sendMediaAsSticker?: boolean
+        sendMediaAsSticker?: boolean;
         /** Send media as document */
-        sendMediaAsDocument?: boolean
+        sendMediaAsDocument?: boolean;
         /** Automatically parse vCards and send them as contacts */
-        parseVCards?: boolean
+        parseVCards?: boolean;
         /** Image or videos caption */
-        caption?: string
+        caption?: string;
         /** Id of the message that is being quoted (or replied to) */
-        quotedMessageId?: string
+        quotedMessageId?: string;
         /** Contacts that are being mentioned in the message */
-        mentions?: Contact[]
+        mentions?: Contact[];
         /** Send 'seen' status */
-        sendSeen?: boolean
+        sendSeen?: boolean;
         /** Media to be sent */
-        media?: MessageMedia
+        media?: MessageMedia;
         /** Extra options */
-        extra?: any
+        extra?: any;
         /** Sticker name, if sendMediaAsSticker is true */
-        stickerName?: string
+        stickerName?: string;
         /** Sticker author, if sendMediaAsSticker is true */
-        stickerAuthor?: string
+        stickerAuthor?: string;
         /** Sticker categories, if sendMediaAsSticker is true */
-        stickerCategories?: string[]
+        stickerCategories?: string[];
     }
 
     export interface MediaFromURLOptions {
-        client?: Client
-        filename?: string
-        unsafeMime?: boolean
-        reqOptions?: RequestInit
+        client?: Client;
+        filename?: string;
+        unsafeMime?: boolean;
+        reqOptions?: RequestInit;
     }
 
     /** Media attached to a message */
     export class MessageMedia {
         /** MIME type of the attachment */
-        mimetype: string
+        mimetype: string;
         /** Base64-encoded data of the file */
-        data: string
+        data: string;
         /** Document file name. Value can be null */
-        filename?: string | null
+        filename?: string | null;
 
         /**
          * @param {string} mimetype MIME type of the attachment
          * @param {string} data Base64-encoded data of the file
          * @param {?string} filename Document file name. Value can be null
          */
-        constructor(mimetype: string, data: string, filename?: string | null)
+        constructor(mimetype: string, data: string, filename?: string | null);
 
         /** Creates a MessageMedia instance from a local file path */
-        static fromFilePath: (filePath: string) => MessageMedia
+        static fromFilePath: (filePath: string) => MessageMedia;
 
         /** Creates a MessageMedia instance from a URL */
-        static fromUrl: (url: string, options?: MediaFromURLOptions) => Promise<MessageMedia>
+        static fromUrl: (
+            url: string,
+            options?: MediaFromURLOptions
+        ) => Promise<MessageMedia>;
     }
 
-    export type MessageContent = string | MessageMedia | Location | Contact | Contact[] | List | Buttons
+    export type MessageContent =
+        | string
+        | MessageMedia
+        | Location
+        | Contact
+        | Contact[]
+        | List
+        | Buttons;
 
     /**
      * Represents a Contact on WhatsApp
      *
-     * @example 
+     * @example
      * {
      *   id: {
      *     server: 'c.us',
@@ -753,86 +826,83 @@ declare namespace WAWebJS {
      */
     export interface Contact {
         /** Contact's phone number */
-        number: string,
+        number: string;
         /** Indicates if the contact is a business contact */
-        isBusiness: boolean,
+        isBusiness: boolean;
         /** ID that represents the contact */
-        id: ContactId,
+        id: ContactId;
         /** Indicates if the contact is an enterprise contact */
-        isEnterprise: boolean,
+        isEnterprise: boolean;
         /** Indicates if the contact is a group contact */
-        isGroup: boolean,
+        isGroup: boolean;
         /** Indicates if the contact is the current user's contact */
-        isMe: boolean,
+        isMe: boolean;
         /** Indicates if the number is saved in the current phone's contacts */
-        isMyContact: boolean
+        isMyContact: boolean;
         /** Indicates if the contact is a user contact */
-        isUser: boolean,
+        isUser: boolean;
         /** Indicates if the number is registered on WhatsApp */
-        isWAContact: boolean,
+        isWAContact: boolean;
         /** Indicates if you have blocked this contact */
-        isBlocked: boolean,
+        isBlocked: boolean;
         /** @todo verify labels type. didn't have any documentation */
-        labels?: string[],
+        labels?: string[];
         /** The contact's name, as saved by the current user */
-        name?: string,
+        name?: string;
         /** The name that the contact has configured to be shown publically */
-        pushname: string,
+        pushname: string;
         /** @todo missing documentation */
-        sectionHeader: string,
+        sectionHeader: string;
         /** A shortened version of name */
-        shortName?: string,
+        shortName?: string;
         /** Indicates if the status from the contact is muted */
-        statusMute: boolean,
+        statusMute: boolean;
         /** @todo missing documentation */
-        type: string,
+        type: string;
         /** @todo missing documentation */
-        verifiedLevel?: undefined,
+        verifiedLevel?: undefined;
         /** @todo missing documentation */
-        verifiedName?: undefined,
+        verifiedName?: undefined;
 
         /** Returns the contact's profile picture URL, if privacy settings allow it */
-        getProfilePicUrl: () => Promise<string>,
+        getProfilePicUrl: () => Promise<string>;
 
-        /** Returns the Chat that corresponds to this Contact.  
+        /** Returns the Chat that corresponds to this Contact.
          * Will return null when getting chat for currently logged in user.
          */
-        getChat: () => Promise<Chat>,
-        
+        getChat: () => Promise<Chat>;
+
         /** Returns the contact's countrycode, (1541859685@c.us) => (1) */
-        getCountryCode(): Promise<string>,
-        
+        getCountryCode(): Promise<string>;
+
         /** Returns the contact's formatted phone number, (12345678901@c.us) => (+1 (234) 5678-901) */
-        getFormattedNumber(): Promise<string>,
-        
+        getFormattedNumber(): Promise<string>;
+
         /** Blocks this contact from WhatsApp */
-        block: () => Promise<boolean>,
+        block: () => Promise<boolean>;
 
         /** Unlocks this contact from WhatsApp */
-        unblock: () => Promise<boolean>,
+        unblock: () => Promise<boolean>;
 
         /** Gets the Contact's current "about" info. Returns null if you don't have permission to read their status.  */
-        getAbout: () => Promise<string | null>,
-
+        getAbout: () => Promise<string | null>;
     }
 
     export interface ContactId {
-        server: string,
-        user: string,
-        _serialized: string,
+        server: string;
+        user: string;
+        _serialized: string;
     }
 
     export interface BusinessContact extends Contact {
-        /** 
+        /**
          * The contact's business profile
          * @todo add a more specific type for the object
          */
-        businessProfile: object
+        businessProfile: object;
     }
 
-    export interface PrivateContact extends Contact {
-
-    }
+    export interface PrivateContact extends Contact {}
 
     /**
      * Represents a Chat on WhatsApp
@@ -854,73 +924,78 @@ declare namespace WAWebJS {
      */
     export interface Chat {
         /** Indicates if the Chat is archived */
-        archived: boolean,
+        archived: boolean;
         /** ID that represents the chat */
-        id: ChatId,
+        id: ChatId;
         /** Indicates if the Chat is a Group Chat */
-        isGroup: boolean,
+        isGroup: boolean;
         /** Indicates if the Chat is readonly */
-        isReadOnly: boolean,
+        isReadOnly: boolean;
         /** Indicates if the Chat is muted */
-        isMuted: boolean,
+        isMuted: boolean;
         /** Unix timestamp for when the mute expires */
-        muteExpiration: number,
+        muteExpiration: number;
         /** Title of the chat */
-        name: string,
+        name: string;
         /** Unix timestamp for when the last activity occurred */
-        timestamp: number,
+        timestamp: number;
         /** Amount of messages unread */
-        unreadCount: number,
+        unreadCount: number;
 
         /** Archives this chat */
-        archive: () => Promise<void>,
+        archive: () => Promise<void>;
         /** Pins this chat and returns its new Pin state */
-        pin: () => Promise<boolean>,
+        pin: () => Promise<boolean>;
         /** Unpins this chat and returns its new Pin state */
-        unpin: () => Promise<boolean>,
+        unpin: () => Promise<boolean>;
         /** Clears all messages from the chat */
-        clearMessages: () => Promise<boolean>,
+        clearMessages: () => Promise<boolean>;
         /** Stops typing or recording in chat immediately. */
-        clearState: () => Promise<boolean>,
+        clearState: () => Promise<boolean>;
         /** Deletes the chat */
-        delete: () => Promise<boolean>,
+        delete: () => Promise<boolean>;
         /** Loads chat messages, sorted from earliest to latest. */
-        fetchMessages: (searchOptions: MessageSearchOptions) => Promise<Message[]>,
+        fetchMessages: (
+            searchOptions: MessageSearchOptions
+        ) => Promise<Message[]>;
         /** Mutes this chat forever, unless a date is specified */
-        mute: (unmuteDate?: Date) => Promise<void>,
+        mute: (unmuteDate?: Date) => Promise<void>;
         /** Send a message to this chat */
-        sendMessage: (content: MessageContent, options?: MessageSendOptions) => Promise<Message>,
+        sendMessage: (
+            content: MessageContent,
+            options?: MessageSendOptions
+        ) => Promise<Message>;
         /** Set the message as seen */
-        sendSeen: () => Promise<void>,
+        sendSeen: () => Promise<void>;
         /** Simulate recording audio in chat. This will last for 25 seconds */
-        sendStateRecording: () => Promise<void>,
+        sendStateRecording: () => Promise<void>;
         /** Simulate typing in chat. This will last for 25 seconds. */
-        sendStateTyping: () => Promise<void>,
+        sendStateTyping: () => Promise<void>;
         /** un-archives this chat */
-        unarchive: () => Promise<void>,
+        unarchive: () => Promise<void>;
         /** Unmutes this chat */
-        unmute: () => Promise<void>,
+        unmute: () => Promise<void>;
         /** Returns the Contact that corresponds to this Chat. */
-        getContact: () => Promise<Contact>,
+        getContact: () => Promise<Contact>;
         /** Marks this Chat as unread */
-        markUnread: () => Promise<void>
+        markUnread: () => Promise<void>;
         /** Returns array of all Labels assigned to this Chat */
-        getLabels: () => Promise<Label[]>
+        getLabels: () => Promise<Label[]>;
     }
 
     export interface MessageSearchOptions {
         /**
          * The amount of messages to return.
-         * Note that the actual number of returned messages may be smaller if there aren't enough messages in the conversation. 
+         * Note that the actual number of returned messages may be smaller if there aren't enough messages in the conversation.
          * Set this to Infinity to load all messages.
          * @default 50
          */
-        limit?: number
+        limit?: number;
     }
 
     /**
      * Id that represents the chat
-     * 
+     *
      * @example
      * id: {
      *   server: 'c.us',
@@ -933,45 +1008,47 @@ declare namespace WAWebJS {
          * Whatsapp server domain
          * @example `c.us`
          */
-        server: string,
+        server: string;
         /**
          * User whatsapp number
          * @example `554199999999`
          */
-        user: string,
+        user: string;
         /**
          * Serialized id
          * @example `554199999999@c.us`
          */
-        _serialized: string,
+        _serialized: string;
     }
 
-    export interface PrivateChat extends Chat {
-
-    }
+    export interface PrivateChat extends Chat {}
 
     export type GroupParticipant = {
-        id: ContactId,
-        isAdmin: boolean
-        isSuperAdmin: boolean
-    }
+        id: ContactId;
+        isAdmin: boolean;
+        isSuperAdmin: boolean;
+    };
 
     /** Promotes or demotes participants by IDs to regular users or admins */
-    export type ChangeParticipantsPermisions = 
-        (participantIds: Array<string>) => Promise<{ status: number }>
+    export type ChangeParticipantsPermisions = (
+        participantIds: Array<string>
+    ) => Promise<{ status: number }>;
 
     /** Adds or removes a list of participants by ID to the group */
-    export type ChangeGroupParticipants = 
-        (participantIds: Array<string>) => Promise<{
+    export type ChangeGroupParticipants = (
+        participantIds: Array<string>
+    ) => Promise<
+        {
             status: number;
             participants: Array<{
                 [key: string]: {
-                    code: number
-                }
-            }>
-         } & {
-             [key: string]: number;
-         }>
+                    code: number;
+                };
+            }>;
+        } & {
+            [key: string]: number;
+        }
+    >;
 
     export interface GroupChat extends Chat {
         /** Group owner */
@@ -994,14 +1071,14 @@ declare namespace WAWebJS {
         setSubject: (subject: string) => Promise<void>;
         /** Updates the group description */
         setDescription: (description: string) => Promise<void>;
-        /** Updates the group settings to only allow admins to send messages 
-         * @param {boolean} [adminsOnly=true] Enable or disable this option 
+        /** Updates the group settings to only allow admins to send messages
+         * @param {boolean} [adminsOnly=true] Enable or disable this option
          * @returns {Promise<boolean>} Returns true if the setting was properly updated. This can return false if the user does not have the necessary permissions.
          */
         setMessagesAdminsOnly: (adminsOnly?: boolean) => Promise<boolean>;
         /**
          * Updates the group settings to only allow admins to edit group info (title, description, photo).
-         * @param {boolean} [adminsOnly=true] Enable or disable this option 
+         * @param {boolean} [adminsOnly=true] Enable or disable this option
          * @returns {Promise<boolean>} Returns true if the setting was properly updated. This can return false if the user does not have the necessary permissions.
          */
         setInfoAdminsOnly: (adminsOnly?: boolean) => Promise<boolean>;
@@ -1019,13 +1096,13 @@ declare namespace WAWebJS {
      */
     export interface ProductMetadata {
         /** Product Id */
-        id: string,
+        id: string;
         /** Product Name */
-        name: string,
+        name: string;
         /** Product Description */
-        description: string,
+        description: string;
         /** Retailer ID */
-        retailer_id?: string
+        retailer_id?: string;
     }
 
     /**
@@ -1043,19 +1120,19 @@ declare namespace WAWebJS {
      */
     export interface Product {
         /** Product Id */
-        id: string,
+        id: string;
         /** Price */
-        price?: string,
+        price?: string;
         /** Product Thumbnail*/
-        thumbnailUrl: string,
+        thumbnailUrl: string;
         /** Currency */
-        currency: string,
+        currency: string;
         /** Product Name */
-        name: string,
+        name: string;
         /** Product Quantity*/
-        quantity: number,
+        quantity: number;
         /** Gets the Product metadata */
-        getData: () => Promise<ProductMetadata>
+        getData: () => Promise<ProductMetadata>;
     }
 
     /**
@@ -1083,13 +1160,13 @@ declare namespace WAWebJS {
      */
     export interface Order {
         /** List of products*/
-        products: Array<Product>,
+        products: Array<Product>;
         /** Order Subtotal */
-        subtotal: string,
+        subtotal: string;
         /** Order Total */
-        total: string,
+        total: string;
         /** Order Currency */
-        currency: string,
+        currency: string;
         /** Order Created At*/
         createdAt: number;
     }
@@ -1124,23 +1201,23 @@ declare namespace WAWebJS {
      */
     export interface Payment {
         /** Payment Id*/
-        id: object,
+        id: object;
         /** Payment currency */
-        paymentCurrency: string,
+        paymentCurrency: string;
         /** Payment ammount  */
-        paymentAmount1000 : number,
+        paymentAmount1000: number;
         /** Payment receiver */
-        paymentMessageReceiverJid : object,
+        paymentMessageReceiverJid: object;
         /** Payment transaction timestamp */
-        paymentTransactionTimestamp : number,
+        paymentTransactionTimestamp: number;
         /** Payment paymentStatus */
-        paymentStatus : number,
+        paymentStatus: number;
         /** Integer that represents the payment Text */
-        paymentTxnStatus  : number,
+        paymentTxnStatus: number;
         /** The note sent with the payment */
-        paymentNote  : string;
+        paymentNote: string;
     }
-    
+
     /**
      * Represents a Call on WhatsApp
      *
@@ -1159,45 +1236,56 @@ declare namespace WAWebJS {
      */
     export interface Call {
         /** Call Id */
-        id: string,
+        id: string;
         /** from */
-        from?: string,
+        from?: string;
         /** Unix timestamp for when the call was created*/
-        timestamp: number,
+        timestamp: number;
         /** Is video */
-        isVideo: boolean,
+        isVideo: boolean;
         /** Is Group */
-        isGroup: boolean,
+        isGroup: boolean;
         /** Indicates if the call was sent by the current user */
-        fromMe: boolean,
+        fromMe: boolean;
         /** indicates if the call can be handled in waweb */
-        canHandleLocally: boolean,
+        canHandleLocally: boolean;
         /** indicates if the call should be handled in waweb */
-        webClientShouldHandle: boolean,
+        webClientShouldHandle: boolean;
         /** Object with participants */
-        participants: object
+        participants: object;
     }
 
     /** Message type List */
     export class List {
-        body: string
-        buttonText: string
-        sections: Array<any>
-        title?: string | null
-        footer?: string | null
-        
-        constructor(body: string, buttonText: string, sections: Array<any>, title?: string | null, footer?: string | null)
+        body: string;
+        buttonText: string;
+        sections: Array<any>;
+        title?: string | null;
+        footer?: string | null;
+
+        constructor(
+            body: string,
+            buttonText: string,
+            sections: Array<any>,
+            title?: string | null,
+            footer?: string | null
+        );
     }
-    
+
     /** Message type buttons */
     export class Buttons {
-        body: string | MessageMedia
-        buttons: Array<Array<string>>
-        title?: string | null
-        footer?: string | null
-        
-        constructor(body: string, buttons: Array<Array<string>>, title?: string | null, footer?: string | null)
+        body: string | MessageMedia;
+        buttons: Array<Array<string>>;
+        title?: string | null;
+        footer?: string | null;
+
+        constructor(
+            body: string,
+            buttons: Array<Array<string>>,
+            title?: string | null,
+            footer?: string | null
+        );
     }
 }
 
-export = WAWebJS
+export = WAWebJS;
